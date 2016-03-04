@@ -1,0 +1,3 @@
+*.retry
+roles/cloudformation/files/keys/*
+!roles/cloudformation/files/keys/.gitkeep

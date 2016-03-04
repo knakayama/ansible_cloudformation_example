@@ -1,0 +1,34 @@
+- name: Create the keypair for ec2
+  ec2_key:
+    name: "{{ demo_stack_name | default('ansible-demo') }}"
+    region: "{{ demo_region | default('ap-northeast-1')}}"
+    key_material: "{{ lookup('file', 'keys/site_key.pub') }}"
+    wait: yes
+    state: present
+
+- name: Launch ansible-demo cloudformation
+  cloudformation:
+    stack_name: "{{ demo_stack_name | default('ansible-demo') }}"
+    region: "{{ demo_region | default('us-east-1') }}"
+    template: roles/cloudformation/files/templates/template.json
+    template_parameters:
+      KeyName: "{{ demo_stack_name | default('ansible-demo') }}"
+      WebInstanceType: "{{ web_instance_type | default('t2.micro') }}"
+      WebServerPort: "{{ web_server_port | default('8080') }}"
+      WebMinInstances: "{{ web_num_instances | default('5') }}"
+      WebMaxInstances: "{{ web_num_instances | default('5') }}"
+      DBName: "{{ db_name | default('ansibledemo') }}"
+      DBUser: "{{ db_user | default('admin') }}"
+      DBPassword: "{{ db_password | default('pAssw0rd')}}"
+      DBAllocatedStorage: "{{ db_allocated_storage | default('5') }}"
+      DBInstanceClass: "{{ db_instance_class | default('db.t2.micro') }}"
+      DBMultiAZ: "{{ db_multi_az | default('false') }}"
+      DBReadReplica: "{{ db_read_replica | default('false') }}"
+    tags:
+      Stack: "{{ demo_stack_name | default('ansible-demo') }}"
+    disable_rollback: yes
+    state: present
+  register: cf_info
+
+- name: show endpoint
+  debug: 'msg="The ELB endpoint is: {{ cf_info.stack_outputs.URL }}"'
