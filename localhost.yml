@@ -1,0 +1,6 @@
+---
+- name: Manage CloudFormation via Ansible
+  hosts: localhost
+  connection: local
+  roles:
+    - { role: cloudformation,   tags: [ cloudformation ] }

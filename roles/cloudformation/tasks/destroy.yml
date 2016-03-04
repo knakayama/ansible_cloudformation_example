@@ -1,0 +1,13 @@
+- name: Destroy the ansible-demo cloudformation
+  cloudformation:
+    stack_name: "{{ demo_stack_name | default('ansible-demo') }}"
+    region: "{{ demo_region | default('ap-northeast-1') }}"
+    template: roles/cloudformation/files/templates/template.json
+    state: absent
+
+- name: Delete the demo keypair
+  ec2_key:
+    name: "{{ demo_stack_name | default('ansible-demo') }}"
+    region: "{{ demo_region | default('ap-northeast-1') }}"
+    state: absent
+    wait: yes
