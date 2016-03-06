@@ -436,11 +436,11 @@
     "WebServerGroup" : {
       "Type" : "AWS::AutoScaling::AutoScalingGroup",
       "Properties" : {
-        "AvailabilityZones" : { "Fn::GetAZs" : "" },
         "LaunchConfigurationName" : { "Ref" : "LaunchConfig" },
         "MinSize" : { "Ref" : "WebMinInstances" },
         "MaxSize" : { "Ref" : "WebMaxInstances" },
-        "LoadBalancerNames" : [ { "Ref" : "ElasticLoadBalancer" } ]
+        "LoadBalancerNames" : [ { "Ref" : "ElasticLoadBalancer" } ],
+        "VPCZoneIdentifier" : [ { "Ref" : "PublicSubnet1" }, { "Ref" : "PublicSubnet2" } ]
       }
     },
 
